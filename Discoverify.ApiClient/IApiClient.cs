@@ -7,6 +7,6 @@
     {
         Task<SearchArtistResponse> SearchArtistsAsync(string artistName, int? limit = null, int? offset = null);
         Task<GenreCollection> GetAvailableGenreSeeds();
-        Task<RecommendationRepsonse> GetRecomendations(string genre, string artistId = null, string trackId = null);
+        Task<RecommendationRepsonse> GetRecomendations(string genre);
     }
 }

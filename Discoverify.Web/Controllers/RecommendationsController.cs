@@ -10,17 +10,19 @@
     using Microsoft.Extensions.Caching.Memory;
     using Discoverify.ApiModels;
     using Discoverify.ApiClient;
+    using Discoverify.Web.Services;
 
     public class RecommendationsController : Controller
     {
         private readonly IApiClient _client;
-        private Queue<RecommendationCollection> _queue;
         private IMemoryCache _cache;
+        private IQueue _queue;
 
-        public RecommendationsController(IApiClient client, IMemoryCache cache)
+        public RecommendationsController(IApiClient client, IMemoryCache cache, IQueue queue)
         {
             _client = client;
             _cache = cache;
+            _queue = queue;
         }
 
         [HttpGet]
@@ -42,9 +44,9 @@
             }
 
             var recomendationsResponse = await _client.GetRecomendations(genre);
-            _queue = CreateRecomendationQueue(recomendationsResponse.Tracks);
+            var queue = _queue.CreateQueue(recomendationsResponse.Tracks);
 
-            _cache.Set("RecomendationQueue", _queue);
+            _cache.Set("RecomendationQueue", queue);
 
             return RedirectToAction("Result");
         }
@@ -53,15 +55,11 @@
         [HttpGet]
         public IActionResult Result()
         {
-            if (_queue == null)
-            {
-                _queue = _cache.Get("RecomendationQueue") as Queue<RecommendationCollection>;
-            }
+            var cachedQueue = _cache.Get("RecomendationQueue") as Queue<RecommendationCollection>;
+            var track = _queue.ProcessQueue(cachedQueue);
 
-            if(_queue.Count > 0)
+            if (track != null)
             { 
-                var track = _queue.Dequeue();
-
                 var t = TimeSpan.FromMilliseconds(track.DurationMs);
                 var trackLength = $"{(int)t.TotalMinutes}:{t.Seconds:00}";
 
@@ -79,8 +77,19 @@
             }
 
             return RedirectToAction("Index");
+        }        
+
+        [HttpPost]
+        public IActionResult Next()
+        {
+            return RedirectToAction("Result");
         }
 
+        [HttpPost]
+        public IActionResult Return()
+        {
+            return RedirectToAction("Index");
+        }
 
 
         public IActionResult Error()
@@ -88,26 +97,5 @@
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-
-        public IActionResult ProcessQueue()
-        {
-
-
-            var track = _queue.Dequeue();
-
-            return RedirectToAction("Result", new { track = track });
-        }
-
-        private Queue<RecommendationCollection> CreateRecomendationQueue(IEnumerable<RecommendationCollection> collection)
-        {
-            var queue = new Queue<RecommendationCollection>();
-
-            foreach (var item in collection)
-            {
-                queue.Enqueue(item);
-            }
-
-            return queue;
-        }
     }
 }

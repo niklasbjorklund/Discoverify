@@ -1,7 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
-    background-color: #F57872;
+    background-color: #77909e;
 }
 
 /* Wrapping element */
@@ -63,9 +63,11 @@
     font-family: sans-serif;
 }
 
-.answer-panel 
-{
-    padding-bottom: 50%;
+.answer-panel {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    /*padding-bottom: 50%;*/
 }
 
 
@@ -80,11 +82,11 @@
     padding-top: 3rem;
 }
 
-.switch-block{
-    display:block;
+.switch-block {
+    display: block;
     margin-right: auto;
     margin-left: auto;
-    width: 243px;
+    width: 60rem;
     padding-top: 16rem;
 }
 
@@ -107,7 +109,7 @@
 
 .btn-large {
     padding: 13px 45px;
-    font-size: 28px;
+    font-size: 19px;
 }
 
 

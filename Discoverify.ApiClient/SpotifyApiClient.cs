@@ -48,7 +48,7 @@
             return JsonConvert.DeserializeObject<GenreCollection>(response);
         }
 
-        public async Task<RecommendationRepsonse> GetRecomendations(string genre, string artistId = null, string trackId = null)
+        public async Task<RecommendationRepsonse> GetRecomendations(string genre)
         {
             var client = GetDefaultClient();
             var url = $"v1/recommendations?seed_genres={genre}&limit=10";

@@ -1,0 +1,17 @@
+﻿@model RecommendationGenres;
+
+<div class="question-title">
+    What are you in the mood for?
+</div>
+
+@using (Html.BeginForm("Index", "Recommendations"))
+{
+    <div class="answer-panel">
+        @foreach (var genre in Model.Genres)
+        {
+            <div class="box">
+                <button name="genre" type="submit" value="@genre" class="btn btn-navy btn-fill-horz">@genre</button>
+            </div>
+        }
+    </div>
+}

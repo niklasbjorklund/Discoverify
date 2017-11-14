@@ -1,0 +1,43 @@
+﻿@model RecommendationResult;
+
+<div class="question-title">
+    Something like this? 
+</div>
+
+<div class="answer-panel">
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="box">
+                <div class="track-title">@Model.ArtistName -  @Model.TrackName</div>
+                <div class="track-body">
+                    <div class="row">
+                        <div class=" col-lg-2">
+                            <strong>Album:</strong>
+                        </div>
+                        <div class=" col-lg-8">
+                            @Model.AlbumName
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class=" col-lg-2">
+                            <strong>Length:</strong>
+                        </div>
+                        <div class=" col-lg-8">
+                            @Model.TrackLength
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="box">
+                <iframe src="https://open.spotify.com/embed?uri=@Model.TrackUri&view=coverart" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="switch-block">
+            <button name="genre" type="submit" asp-controller="Recommendations" asp-action="ProcessQueue" class="btn btn-large btn-navy btn-fill-horz">Give me another one!</button>
+        </div>
+    </div>
+</div>

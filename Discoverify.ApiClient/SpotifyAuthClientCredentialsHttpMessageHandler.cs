@@ -11,6 +11,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+
     public class SpotifyAuthClientCredentialsHttpMessageHandler : DelegatingHandler
     {
         private const string AuthenticationEndpoint = "https://accounts.spotify.com/api/token";
@@ -34,25 +35,19 @@
 
         private async Task<string> GetAuthenticationTokenAsync()
         {
-            var cacheKey = "SpotifyWebApiSession-Token" + _clientId;
 
-            //var token = MemoryCache.Default.Get(cacheKey) as string;
             string token = string.Empty;
 
-            if (string.IsNullOrEmpty(token))
-            {
-                var timeBeforeRequest = DateTime.Now;
+            var timeBeforeRequest = DateTime.Now;
 
-                var response = await GetAuthenticationTokenResponse();
+            var response = await GetAuthenticationTokenResponse();
 
-                token = response?.AccessToken;
-                if (token == null)
-                    throw new AuthenticationException("Spotify authentication failed");
+            token = response?.AccessToken;
+            if (token == null)
+                throw new AuthenticationException("Spotify authentication failed");
 
-                var expireTime = timeBeforeRequest.AddSeconds(response.ExpiresIn);
+            var expireTime = timeBeforeRequest.AddSeconds(response.ExpiresIn);
 
-                //MemoryCache.Set(cacheKey, token, new DateTimeOffset(expireTime));
-            }
             return token;
         }
 
@@ -77,6 +72,7 @@
             var authenticationResponse = JsonConvert.DeserializeObject<AuthenticationResponse>(responseString);
             return authenticationResponse;
         }
+
         private string BuildAuthHeader()
         {
             return Base64Encode(_clientId + ":" + _clientSecret);

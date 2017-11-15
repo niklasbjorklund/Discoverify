@@ -28,11 +28,20 @@
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var availableGenres = await _client.GetAvailableGenreSeeds();
+            GenreCollection availableGenres;
 
-            var genres = new RecommendationGenres { Genres = availableGenres.Genres };
+            try
+            {
+                availableGenres = await _client.GetAvailableGenreSeeds();
 
-            return View(genres);
+                var genres = new RecommendationGenres { Genres = availableGenres.Genres };
+
+                return View(genres);
+            }
+            catch (Exception)
+            {
+                return NoContent();
+            }
         }
 
         [HttpPost]
@@ -43,38 +52,55 @@
                 return NotFound();
             }
 
-            var recomendationsResponse = await _client.GetRecomendations(genre);
-            var queue = _queue.CreateQueue(recomendationsResponse.Tracks);
+            RecommendationRepsonse response;
 
-            _cache.Set("RecomendationQueue", queue);
+            try
+            {
+                response = await _client.GetRecomendations(genre, 10);
+                var queue = _queue.CreateQueue(response.Tracks);
 
-            return RedirectToAction("Result");
+                _cache.Set("RecomendationQueue", queue);
+
+                return RedirectToAction("Result");
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+
         }
         
         [HttpGet]
         public IActionResult Result()
         {
-            var cachedQueue = _cache.Get("RecomendationQueue") as Queue<RecommendationCollection>;
-            var track = _queue.ProcessQueue(cachedQueue);
+            try
+            {
+                var cachedQueue = _cache.Get("RecomendationQueue") as Queue<RecommendationCollection>;
+                var track = _queue.ProcessQueue(cachedQueue);
 
-            if (track != null)
-            { 
-                var t = TimeSpan.FromMilliseconds(track.DurationMs);
-                var trackLength = $"{(int)t.TotalMinutes}:{t.Seconds:00}";
-
-                var recommendation = new RecommendationResult
+                if (track != null)
                 {
-                    ArtistName = track.Artists.Select(a => a.Name).FirstOrDefault(),
-                    TrackName = track.Name,
-                    AlbumName = track.Album.Name,
-                    TrackUri = track.Uri,
-                    TrackLength = trackLength,
-                    TrackPopularity = track.Popularity
-                };
+                    var t = TimeSpan.FromMilliseconds(track.DurationMs);
+                    var trackLength = $"{(int)t.TotalMinutes}:{t.Seconds:00}";
 
-                return View(recommendation);
+                    var recommendation = new RecommendationResult
+                    {
+                        ArtistName = track.Artists.Select(a => a.Name).FirstOrDefault(),
+                        TrackName = track.Name,
+                        AlbumName = track.Album.Name,
+                        TrackUri = track.Uri,
+                        TrackLength = trackLength,
+                        TrackPopularity = track.Popularity
+                    };
+
+                    return View(recommendation);
+                }
             }
-
+            catch (Exception)
+            {
+                return NotFound();
+            }
+            
             return RedirectToAction("Index");
         }        
 

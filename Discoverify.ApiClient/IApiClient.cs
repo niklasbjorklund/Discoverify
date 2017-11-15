@@ -5,8 +5,8 @@
 
     public interface IApiClient
     {
-        Task<SearchArtistResponse> SearchArtistsAsync(string artistName, int? limit = null, int? offset = null);
+        Task<SearchArtistResponse> SearchArtistsAsync(string artistName, int limit, int offset);
         Task<GenreCollection> GetAvailableGenreSeeds();
-        Task<RecommendationRepsonse> GetRecomendations(string genre);
+        Task<RecommendationRepsonse> GetRecomendations(string genre, int limit);
     }
 }

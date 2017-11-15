@@ -28,7 +28,7 @@
             return client;
         }
 
-        public async Task<SearchArtistResponse> SearchArtistsAsync(string artistName, int? limit = null, int? offset = null)
+        public async Task<SearchArtistResponse> SearchArtistsAsync(string artistName, int limit, int offset)
         {
             var client = GetDefaultClient();
             var url = $"/v1/search?q={artistName}&type=artist&limit={limit}&offset={offset}";
@@ -48,10 +48,10 @@
             return JsonConvert.DeserializeObject<GenreCollection>(response);
         }
 
-        public async Task<RecommendationRepsonse> GetRecomendations(string genre)
+        public async Task<RecommendationRepsonse> GetRecomendations(string genre, int limit)
         {
             var client = GetDefaultClient();
-            var url = $"v1/recommendations?seed_genres={genre}&limit=10";
+            var url = $"v1/recommendations?seed_genres={genre}&limit={limit}";
 
             var response = await client.GetStringAsync(url);
 

@@ -23,7 +23,7 @@
             services.AddMvc();
 
             services.AddScoped<IApiClient, SpotifyApiClient>();
-            services.AddScoped<IQueue, RecommendationQueue>();
+            services.AddScoped(typeof(IQueue<>), typeof(RecommendationQueue<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

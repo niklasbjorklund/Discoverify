@@ -3,11 +3,11 @@
     using System.Collections.Generic;
     using Discoverify.ApiModels;
 
-    public class RecommendationQueue : IQueue
+    public class RecommendationQueue<T> : IQueue<T> where T : RecommendationCollection
     {
-        public Queue<RecommendationCollection> CreateQueue(IEnumerable<RecommendationCollection> collection)
+        public Queue<T> CreateQueue(IEnumerable<T> collection)
         {
-            var queue = new Queue<RecommendationCollection>();
+            var queue = new Queue<T>();
 
             foreach (var item in collection)
             {
@@ -17,7 +17,7 @@
             return queue;
         }
 
-        public RecommendationCollection ProcessQueue(Queue<RecommendationCollection> queue)
+        public T ProcessQueue(Queue<T> queue)
         {
             if (queue.Count > 0)
             {

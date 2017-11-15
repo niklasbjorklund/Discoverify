@@ -6,11 +6,7 @@ namespace Discoverify.Tests
     using Discoverify.Web.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Caching.Memory;
-    using Microsoft.Extensions.Options;
     using Moq;
-    using Moq.Protected;
-    using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Xunit;
@@ -22,7 +18,7 @@ namespace Discoverify.Tests
         {
             var cache = new MemoryCache(new MemoryCacheOptions());
             var client = new Mock<IApiClient>();
-            var queue = new Mock<IQueue>();
+            var queue = new Mock<IQueue<RecommendationCollection>>();
 
             var t = new GenreCollection();
 
@@ -40,7 +36,7 @@ namespace Discoverify.Tests
         {
             var cache = new MemoryCache(new MemoryCacheOptions());
             var client = new Mock<IApiClient>();
-            var queue = new Mock<IQueue>();
+            var queue = new Mock<IQueue<RecommendationCollection>>();
 
             var r = new RecommendationRepsonse();
             var q = new Queue<RecommendationCollection>();

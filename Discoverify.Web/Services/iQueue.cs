@@ -1,11 +1,10 @@
 ﻿namespace Discoverify.Web.Services
 {
-    using Discoverify.ApiModels;
     using System.Collections.Generic;
 
-    public interface IQueue
+    public interface IQueue<T>
     {
-        Queue<RecommendationCollection> CreateQueue(IEnumerable<RecommendationCollection> collection);
-        RecommendationCollection ProcessQueue(Queue<RecommendationCollection> queue);
+        Queue<T> CreateQueue(IEnumerable<T> collection);
+        T ProcessQueue(Queue<T> queue);
     }
 }

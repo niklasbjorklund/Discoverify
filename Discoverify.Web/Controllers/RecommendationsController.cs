@@ -16,9 +16,9 @@
     {
         private readonly IApiClient _client;
         private IMemoryCache _cache;
-        private IQueue _queue;
+        private IQueue<RecommendationCollection> _queue;
 
-        public RecommendationsController(IApiClient client, IMemoryCache cache, IQueue queue)
+        public RecommendationsController(IApiClient client, IMemoryCache cache, IQueue<RecommendationCollection> queue)
         {
             _client = client;
             _cache = cache;
@@ -50,8 +50,7 @@
 
             return RedirectToAction("Result");
         }
-
-
+        
         [HttpGet]
         public IActionResult Result()
         {
@@ -90,7 +89,6 @@
         {
             return RedirectToAction("Index");
         }
-
 
         public IActionResult Error()
         {
